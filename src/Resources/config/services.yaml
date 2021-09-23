@@ -1,0 +1,74 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Adeliom\EasyBlogBundle\Controller\:
+        resource: '../../Controller'
+        autowire: true
+        autoconfigure: true
+        tags: [ 'controller.service_arguments' ]
+
+    easy_blog.post.route_loader:
+        class: Adeliom\EasyBlogBundle\Routing\BlogPostLoader
+        arguments:
+            - '%easy_blog.post.controller%'
+            - '%easy_blog.post.class%'
+            - '@easy_blog.post.repository'
+            - '%easy_blog.page%'
+            - '%kernel.environment%'
+        tags: [ routing.loader ]
+
+    easy_blog.category.route_loader:
+        class: Adeliom\EasyBlogBundle\Routing\BlogCategoryLoader
+        arguments:
+            - '%easy_blog.category.controller%'
+            - '%easy_blog.category.class%'
+            - '@easy_blog.category.repository'
+            - '%easy_blog.page%'
+            - '%kernel.environment%'
+        tags: [ routing.loader ]
+
+    easy_blog.post.repository:
+        public: true
+        class: '%easy_blog.post.repository%'
+        arguments:
+            - '@Doctrine\Persistence\ManagerRegistry'
+            - '%easy_blog.post.class%'
+        calls:
+            - [ 'setConfig', [ '%easy_blog.cache%' ] ]
+        tags: [ doctrine.repository_service ]
+
+    easy_blog.category.repository:
+        public: true
+        class: '%easy_blog.category.repository%'
+        arguments:
+            - '@Doctrine\Persistence\ManagerRegistry'
+            - '%easy_blog.category.class%'
+        calls:
+            - [ 'setConfig', [ '%easy_blog.cache%' ] ]
+        tags: [ doctrine.repository_service ]
+
+    Adeliom\EasyBlogBundle\EventListener\DoctrineMappingListener:
+        arguments:
+            - '%easy_blog.post.class%'
+            - '%easy_blog.category.class%'
+        tags:
+            - doctrine.event_subscriber
+
+    easy_blog.sitemap.subscriber:
+        class: Adeliom\EasyBlogBundle\EventListener\SitemapSubscriber
+        arguments:
+            - "@router"
+            - "@easy_blog.post.repository"
+            - "@easy_blog.category.repository"
+        tags:
+            - { name: "kernel.event_subscriber", priority: 100 }
+
+    Adeliom\EasyBlogBundle\EventListener\BlogListener:
+        arguments:
+            - "@easy_blog.post.repository"
+            - "@easy_blog.category.repository"
+            - "%easy_blog.page%"
+        tags:
+            - kernel.event_subscriber

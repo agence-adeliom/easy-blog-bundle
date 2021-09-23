@@ -1,0 +1,57 @@
+easy:
+  blog:
+    blog: Blog
+    admin:
+      crud:
+        title:
+          article:
+            edit: Editer l'article
+            index: Liste des articles
+            new: Nouvel article
+            detail: Détail de l'article
+          category:
+            edit: Editer la catégorie
+            index: Liste des catégories
+            new: Nouvelle catégorie
+            detail: Détail de la catégorie
+        label:
+          article:
+            singular: un article
+            plural: des articles
+            new: Nouvel article
+            edit: Editer l'article
+            delete: Supprimer l'article
+            saveAndReturn: Enregistrer l'article et retourner à la liste
+            saveAndContinue: Enregistrer l'article et rester sur cette page
+            saveAndAddAnother: Enregistrer l'article puis en créer une autre
+          category:
+            singular: une catégorie
+            plural: des catégories
+            new: Nouvelle catégorie
+            edit: Editer la catégorie
+            delete: Supprimer la catégorie
+            saveAndReturn: Enregistrer la catégorie et retourner à la liste
+            saveAndContinue: Enregistrer la catégorie et rester sur cette page
+            saveAndAddAnother: Enregistrer la catégorie puis en créer une autre
+      menu:
+        articles: Articles
+        categories: Catégories
+      panel:
+        information: Informations
+        metadatas: Métadonnées
+        seo: SEO
+        publication: Publication
+      field:
+        name: Nom
+        categories: Catégories
+        state: Status
+        publishDate: Date de publication
+        unpublishDate: Date de dépublication
+        slug: Permalien
+        slug_edit: "Etes-vous sur de vouloir modifier le permalien ?"
+        category: Catégorie
+    front:
+      categories: Catégories
+      category: Catégorie
+      articles: Articles
+      article: Article

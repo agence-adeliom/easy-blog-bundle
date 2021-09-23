@@ -1,0 +1,22 @@
+{% extends '@EasyBlog/front/index.html.twig' %}
+
+{% block title %}{{- seo_title(category.name) -}}{% endblock %}
+
+{% block easy_page_head_metas %}{{- seo_metas(category.seo) -}}{% endblock %}
+
+{% block easy_page_page_content %}
+    <section>
+        <article>
+            <h1>{{ category.name }}</h1>
+
+            {% for post in posts %}
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ post.name }}</h3>
+                        <a href="{{ path('easy_blog_post_index', {"category" : post.category.slug, "post" : post.slug}) }}" class="btn btn-primary">Read more</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </article>
+    </section>
+{% endblock %}
