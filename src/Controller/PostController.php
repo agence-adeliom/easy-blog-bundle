@@ -4,7 +4,7 @@ namespace Adeliom\EasyBlogBundle\Controller;
 
 use Adeliom\EasyBlogBundle\Event\EasyBlogCategoryEvent;
 use Adeliom\EasyBlogBundle\Event\EasyBlogPostEvent;
-use Adeliom\EasySeoBundle\Services\BreadCrumbCollection;
+use Adeliom\EasySeoBundle\Services\BreadcrumbCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,7 @@ class PostController extends AbstractController
     {
         return array_merge(parent::getSubscribedServices(), [
             'event_dispatcher' => '?'.EventDispatcherInterface::class,
-            'easy_seo.breadcrumb' => '?'.BreadCrumbCollection::class,
+            'easy_seo.breadcrumb' => '?'.BreadcrumbCollection::class,
         ]);
     }
 

@@ -2,8 +2,8 @@
 
 namespace Adeliom\EasyBlogBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Adeliom\EasyBlogBundle\DependencyInjection\EasyBlogExtension;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class EasyBlogBundle extends Bundle
 {

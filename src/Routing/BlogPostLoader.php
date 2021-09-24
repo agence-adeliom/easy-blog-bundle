@@ -7,7 +7,6 @@ use Adeliom\EasyBlogBundle\Repository\PostRepository;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class BlogPostLoader extends Loader
 {

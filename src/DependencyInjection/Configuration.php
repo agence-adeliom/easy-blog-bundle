@@ -3,10 +3,10 @@
 namespace Adeliom\EasyBlogBundle\DependencyInjection;
 
 
-use Adeliom\EasyBlogBundle\Controller\CategoryController;
 use Adeliom\EasyBlogBundle\Controller\Admin\CategoryCrudController;
-use Adeliom\EasyBlogBundle\Controller\PostController;
 use Adeliom\EasyBlogBundle\Controller\Admin\PostCrudController;
+use Adeliom\EasyBlogBundle\Controller\CategoryController;
+use Adeliom\EasyBlogBundle\Controller\PostController;
 use Adeliom\EasyBlogBundle\Entity\CategoryEntity;
 use Adeliom\EasyBlogBundle\Entity\PostEntity;
 use Adeliom\EasyBlogBundle\Repository\CategoryRepository;

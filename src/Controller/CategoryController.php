@@ -4,7 +4,7 @@ namespace Adeliom\EasyBlogBundle\Controller;
 
 use Adeliom\EasyBlogBundle\Event\EasyBlogCategoryEvent;
 use Adeliom\EasySeoBundle\Entity\SEO;
-use Adeliom\EasySeoBundle\Services\BreadCrumbCollection;
+use Adeliom\EasySeoBundle\Services\BreadcrumbCollection;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +19,7 @@ class CategoryController extends AbstractController
     {
         return array_merge(parent::getSubscribedServices(), [
             'event_dispatcher' => '?'.EventDispatcherInterface::class,
-            'easy_seo.breadcrumb' => '?'.BreadCrumbCollection::class,
+            'easy_seo.breadcrumb' => '?'.BreadcrumbCollection::class,
         ]);
     }
 
