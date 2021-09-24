@@ -20,9 +20,7 @@ abstract class CategoryCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->addFormTheme('@FOSCKEditor/Form/ckeditor_widget.html.twig')
             ->addFormTheme('@EasyCommon/crud/custom_panel.html.twig')
-            ->addFormTheme('@EasyEditor/form/editor_widget.html.twig')
             ->addFormTheme('@EasyMedia/form/easy-media.html.twig')
 
             ->setPageTitle(Crud::PAGE_INDEX, "easy.blog.admin.crud.title.category." . Crud::PAGE_INDEX)
