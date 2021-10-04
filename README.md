@@ -20,8 +20,7 @@ composer require agence-adeliom/easy-blog-bundle
 
 ## Documentation
 
-TODO
-
+[Check it here](doc/index.md)
 
 ## License
 
