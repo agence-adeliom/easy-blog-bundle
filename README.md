@@ -19,9 +19,61 @@ Install with composer
 composer require agence-adeliom/easy-blog-bundle
 ```
 
+### Setup database
+
+#### Using doctrine migrations
+
+```bash
+php bin/console doctrine:migration:diff
+php bin/console doctrine:migration:migrate
+```
+
+#### Without
+
+```bash
+php bin/console doctrine:schema:update --force
+```
+
+
 ## Documentation
 
-[Check it here](doc/index.md)
+### Manage in your Easyadmin dashboard
+
+Go to your dashboard controller, example : `src/Controller/Admin/DashboardController.php`
+
+```php
+<?php
+
+namespace App\Controller\Admin;
+
+...
+use App\Entity\EasyBlog\Post;
+use App\Entity\EasyBlog\Category;
+
+class DashboardController extends AbstractDashboardController
+{
+    ...
+    public function configureMenuItems(): iterable
+    {
+        ...
+        yield MenuItem::section('easy.blog.blog'); // (Optional)
+        yield MenuItem::linkToCrud('easy.blog.admin.menu.categories', 'fa fa-folder', Category::class);
+        yield MenuItem::linkToCrud('easy.blog.admin.menu.articles', 'fa fa-file-alt', Post::class);
+
+        ...
+```
+
+### Customize blog's root path
+
+```yaml
+#config/packages/easy_blog.yaml
+easy_blog:
+  ...
+  page:
+    root_path: '/blog'
+```
+
+NOTE : You will need to clear your cache after change because the RouteLoader need to be cleared.
 
 ## License
 
