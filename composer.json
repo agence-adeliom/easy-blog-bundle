@@ -1,6 +1,7 @@
 {
     "name": "agence-adeliom/easy-blog-bundle",
     "type": "symfony-bundle",
+    "version": "1.0.0",
     "description": "A Symfony simple blogging bundle for EasyAdmin",
     "keywords": ["symfony", "easyadmin", "blog"],
     "homepage": "https://github.com/agence-adeliom/easy-blog-bundle",
