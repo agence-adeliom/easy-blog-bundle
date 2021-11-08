@@ -42,8 +42,6 @@ class BlogPostLoader extends Loader
             '_controller' => $this->controller . '::index',
         ];
         $requirements = [
-            'category' => "([a-zA-Z0-9_-]+\/?)*",
-            'post' => "([a-zA-Z0-9_-]+\/?)*",
         ];
         $route = new Route($path, $defaults, $requirements, [], '', [], [], "request.attributes.has('_easy_blog_category') && request.attributes.has('_easy_blog_post')");
 

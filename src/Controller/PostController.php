@@ -29,8 +29,8 @@ class PostController extends AbstractController
 
         $template = '@EasyBlog/front/post.html.twig';
 
-        $category = $this->getDoctrine()->getRepository($this->getParameter('easy_blog.category.class'))->getBySlug($category);
-        $post = $this->getDoctrine()->getRepository($this->getParameter('easy_blog.post.class'))->getBySlug($post, $category);
+        $category = $request->attributes->get("_easy_blog_category");
+        $post = $request->attributes->get("_easy_blog_post");
 
         $breadcrumb->addRouteItem($category->getName(), ['route' => "easy_blog_category_index", 'params' => ['category' => $category->getSlug()]]);
         $breadcrumb->addRouteItem($post->getName(), ['route' => "easy_blog_post_index", 'params' => ['category' => $post->getCategory()->getSlug(), 'post' => $post->getSlug()]]);
