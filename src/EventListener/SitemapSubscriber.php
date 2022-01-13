@@ -70,8 +70,8 @@ class SitemapSubscriber implements EventSubscriberInterface
                 $urls->addUrl(
                     new UrlConcrete(
                         $this->urlGenerator->generate(
-                            'easy_blog_index',
-                            ['slugs' => $category->getTree()],
+                            'easy_blog_category_index',
+                            ['category' => $category->getSlug()],
                             UrlGeneratorInterface::ABSOLUTE_URL
                         )
                     ),
@@ -93,8 +93,8 @@ class SitemapSubscriber implements EventSubscriberInterface
                 $urls->addUrl(
                     new UrlConcrete(
                         $this->urlGenerator->generate(
-                            'easy_blog_index',
-                            ['slugs' => $post->getTree()],
+                            'easy_blog_post_index',
+                            ['post' => $post->getSlug(), 'category' => $post->getCategory()->getSlug()],
                             UrlGeneratorInterface::ABSOLUTE_URL
                         )
                     ),
