@@ -27,13 +27,13 @@ class CategoryController extends AbstractController
     {
         $request->setLocale($_locale ?: $request->getLocale());
 
-        $breadcrumb = $this->get('easy_seo.breadcrumb');
-        $breadcrumb->addRouteItem('homepage', ['route' => "easy_page_index"]);
-        $breadcrumb->addRouteItem('blog', ['route' => "easy_blog_category_index"]);
-
         if($request->attributes->get("_easy_blog_root")){
             return $this->blogRoot($request);
         }
+
+        $breadcrumb = $this->get('easy_seo.breadcrumb');
+        $breadcrumb->addRouteItem('homepage', ['route' => "easy_page_index"]);
+        $breadcrumb->addRouteItem('blog', ['route' => "easy_blog_category_index"]);
 
         $template = '@EasyBlog/front/category.html.twig';
 
