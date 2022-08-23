@@ -31,7 +31,7 @@
         "easycorp/easyadmin-bundle": "^3.4 || ^v4.0.0",
         "agence-adeliom/easy-common-bundle": "^2.0 || @dev",
         "agence-adeliom/easy-page-bundle": "^2.0 || @dev",
-        "babdev/pagerfanta-bundle": "^2.10",
+        "babdev/pagerfanta-bundle": "^v2.11.0",
         "pagerfanta/twig": "^2.7",
         "pagerfanta/doctrine-orm-adapter": "^2.7"
     },
