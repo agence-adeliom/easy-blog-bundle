@@ -1,0 +1,56 @@
+easy:
+  blog:
+    blog: Blog
+    admin:
+      crud:
+        title:
+          article:
+            edit: Article edition
+            index: Articles list
+            new: New article
+            detail: Article details
+          category:
+            edit: Category edition
+            index: Categories list
+            new: New categories
+            detail: Category details
+        label:
+          article:
+            singular: article
+            plural: entries
+            new: New article
+            edit: Edit
+            delete: Delete
+            saveAndReturn: Save and return
+            saveAndContinue: Save and continue
+            saveAndAddAnother: Save and add another
+          category:
+            singular: une catégorie
+            plural: des catégories
+            new: New category
+            edit: Edit
+            delete: Delete
+            saveAndReturn: Save and return
+            saveAndContinue: Save and continue
+            saveAndAddAnother: Save and add another
+      menu:
+        articles: Articles
+        categories: Categories
+      panel:
+        information: Informations
+        metadatas: Metadatas
+        seo: SEO
+        publication: Publication
+      field:
+        name: Name
+        categories: Categories
+        state: Status
+        publishDate: Publish date
+        unpublishDate: Unpublish date
+        slug: Permalink
+        slug_edit: "Are you sure you want to edit this permalink ?"
+        category: Category
+    front:
+      categories: Catégories
+      category: Catégorie
+      entries: Articles
