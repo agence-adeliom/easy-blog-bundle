@@ -20,12 +20,12 @@ class CategoryEntity implements \Stringable
 {
     use EntityIdTrait;
     use EntityTimestampableTrait {
-        EntityTimestampableTrait::__construct as private __TimestampableConstruct;
+        EntityTimestampableTrait::__construct as private TimestampableConstruct;
     }
     use EntityNameSlugTrait;
     use EntityStatusTrait;
     use EntitySeoTrait {
-        EntitySeoTrait::__construct as private __SEOConstruct;
+        EntitySeoTrait::__construct as private SEOConstruct;
     }
 
     /**

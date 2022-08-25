@@ -34,7 +34,7 @@ class CategoryController extends AbstractController
             return $this->blogRoot($request);
         }
 
-        $breadcrumb = $this->get('easy_seo.breadcrumb');
+        $breadcrumb = $this->container->get('easy_seo.breadcrumb');
         $breadcrumb->addRouteItem('homepage', ['route' => "easy_page_index"]);
         $breadcrumb->addRouteItem('blog', ['route' => "easy_blog_category_index"]);
 
@@ -58,7 +58,7 @@ class CategoryController extends AbstractController
         /**
          * @var EasyBlogCategoryEvent $result;
          */
-        $result = $this->get("event_dispatcher")->dispatch($event, EasyBlogCategoryEvent::NAME);
+        $result = $this->container->get("event_dispatcher")->dispatch($event, EasyBlogCategoryEvent::NAME);
 
         return $this->render($result->getTemplate(), $result->getArgs());
     }
@@ -67,7 +67,7 @@ class CategoryController extends AbstractController
     {
         $template = '@EasyBlog/front/root.html.twig';
 
-        $breadcrumb = $this->get('easy_seo.breadcrumb');
+        $breadcrumb = $this->container->get('easy_seo.breadcrumb');
         $breadcrumb->addRouteItem('homepage', ['route' => "easy_page_index"]);
         $breadcrumb->addRouteItem('blog', ['route' => "easy_blog_category_index"]);
 
@@ -91,7 +91,7 @@ class CategoryController extends AbstractController
         /**
          * @var EasyBlogCategoryEvent $result;
          */
-        $result = $this->get("event_dispatcher")->dispatch($event, EasyBlogCategoryEvent::NAME);
+        $result = $this->container->get("event_dispatcher")->dispatch($event, EasyBlogCategoryEvent::NAME);
 
         return $this->render($result->getTemplate(), $result->getArgs());
     }

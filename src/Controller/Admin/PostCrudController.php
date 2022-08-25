@@ -53,7 +53,7 @@ abstract class PostCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $context = $this->get(AdminContextProvider::class)->getContext();
+        $context = $this->container->get(AdminContextProvider::class)->getContext();
         $subject = $context->getEntity();
 
         yield IdField::new('id')->hideOnForm();

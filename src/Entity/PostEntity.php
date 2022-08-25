@@ -21,15 +21,15 @@ class PostEntity
 {
     use EntityIdTrait;
     use EntityTimestampableTrait {
-        EntityTimestampableTrait::__construct as private __TimestampableConstruct;
+        EntityTimestampableTrait::__construct as private TimestampableConstruct;
     }
     use EntityNameSlugTrait;
     use EntityThreeStateStatusTrait;
     use EntityPublishableTrait {
-        EntityPublishableTrait::__construct as private __PublishableConstruct;
+        EntityPublishableTrait::__construct as private PublishableConstruct;
     }
     use EntitySeoTrait {
-        EntitySeoTrait::__construct as private __SEOConstruct;
+        EntitySeoTrait::__construct as private SEOConstruct;
     }
 
     /**

@@ -23,7 +23,7 @@ class PostController extends AbstractController
     public function index(Request $request, string $category = '', string $post = '', string $_locale = null): Response
     {
         $request->setLocale($_locale ?: $request->getLocale());
-        $breadcrumb = $this->get('easy_seo.breadcrumb');
+        $breadcrumb = $this->container->get('easy_seo.breadcrumb');
         $breadcrumb->addRouteItem('homepage', ['route' => "easy_page_index"]);
         $breadcrumb->addRouteItem('blog', ['route' => "easy_blog_category_index"]);
 
@@ -44,7 +44,7 @@ class PostController extends AbstractController
         /**
          * @var EasyBlogCategoryEvent $result;
          */
-        $result = $this->get('event_dispatcher')->dispatch($event, EasyBlogCategoryEvent::NAME);
+        $result = $this->container->get('event_dispatcher')->dispatch($event, EasyBlogCategoryEvent::NAME);
 
         return $this->render($result->getTemplate(), $result->getArgs());
     }
