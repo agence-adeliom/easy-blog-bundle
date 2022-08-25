@@ -14,12 +14,15 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CategoryController extends AbstractController
 {
+    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry)
+    {
+    }
 
     public static function getSubscribedServices(): array
     {
         return array_merge(parent::getSubscribedServices(), [
-            'event_dispatcher' => '?'.EventDispatcherInterface::class,
-            'easy_seo.breadcrumb' => '?'.BreadcrumbCollection::class,
+            'event_dispatcher' => '?' . EventDispatcherInterface::class,
+            'easy_seo.breadcrumb' => '?' . BreadcrumbCollection::class,
         ]);
     }
 
@@ -27,7 +30,7 @@ class CategoryController extends AbstractController
     {
         $request->setLocale($_locale ?: $request->getLocale());
 
-        if($request->attributes->get("_easy_blog_root")){
+        if ($request->attributes->get("_easy_blog_root")) {
             return $this->blogRoot($request);
         }
 
@@ -38,7 +41,7 @@ class CategoryController extends AbstractController
         $template = '@EasyBlog/front/category.html.twig';
 
         $category = $request->attributes->get("_easy_blog_category");
-        $postsQueryBuilder = $this->getDoctrine()->getRepository($this->getParameter('easy_blog.post.class'))->getByCategory($category, true);
+        $postsQueryBuilder = $this->managerRegistry->getRepository($this->getParameter('easy_blog.post.class'))->getByCategory($category, true);
 
         $pagerfanta = new Pagerfanta(
             new QueryAdapter($postsQueryBuilder)
@@ -60,7 +63,7 @@ class CategoryController extends AbstractController
         return $this->render($result->getTemplate(), $result->getArgs());
     }
 
-    public function blogRoot(Request $request) : Response
+    public function blogRoot(Request $request): Response
     {
         $template = '@EasyBlog/front/root.html.twig';
 
@@ -68,8 +71,8 @@ class CategoryController extends AbstractController
         $breadcrumb->addRouteItem('homepage', ['route' => "easy_page_index"]);
         $breadcrumb->addRouteItem('blog', ['route' => "easy_blog_category_index"]);
 
-        $categories = $this->getDoctrine()->getRepository($this->getParameter('easy_blog.category.class'))->getPublished();
-        $postsQueryBuilder = $this->getDoctrine()->getRepository($this->getParameter('easy_blog.post.class'))->getPublished(true);
+        $categories = $this->managerRegistry->getRepository($this->getParameter('easy_blog.category.class'))->getPublished();
+        $postsQueryBuilder = $this->managerRegistry->getRepository($this->getParameter('easy_blog.post.class'))->getPublished(true);
 
         $pagerfanta = new Pagerfanta(
             new QueryAdapter($postsQueryBuilder)

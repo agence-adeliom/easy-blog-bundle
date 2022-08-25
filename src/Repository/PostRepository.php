@@ -8,9 +8,8 @@ use Adeliom\EasyCommonBundle\Enum\ThreeStateStatusEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
-
-class PostRepository extends ServiceEntityRepository {
-
+class PostRepository extends ServiceEntityRepository
+{
     /**
      * @var bool
      */
@@ -21,18 +20,12 @@ class PostRepository extends ServiceEntityRepository {
      */
     protected $cacheTtl;
 
-    /**
-     * @param array $cacheConfig
-     */
     public function setConfig(array $cacheConfig)
     {
         $this->cacheEnabled = $cacheConfig['enabled'];
         $this->cacheTtl     = $cacheConfig['ttl'];
     }
 
-    /**
-     * @return QueryBuilder
-     */
     public function getPublishedQuery(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('post')
@@ -63,9 +56,10 @@ class PostRepository extends ServiceEntityRepository {
     public function getPublished(bool $returnQueryBuilder = false)
     {
         $qb = $this->getPublishedQuery();
-        if ($returnQueryBuilder){
+        if ($returnQueryBuilder) {
             return $qb;
         }
+
         return $qb->getQuery()
             ->useResultCache($this->cacheEnabled, $this->cacheTtl)
             ->getResult();
@@ -80,9 +74,10 @@ class PostRepository extends ServiceEntityRepository {
         $qb->andWhere('post.category = :category')
             ->setParameter('category', $categoryEntity)
         ;
-        if ($returnQueryBuilder){
+        if ($returnQueryBuilder) {
             return $qb;
         }
+
         return $qb->getQuery()
             ->useResultCache($this->cacheEnabled, $this->cacheTtl)
             ->getResult();
@@ -97,17 +92,18 @@ class PostRepository extends ServiceEntityRepository {
         $qb = $this->getPublishedQuery();
         $qb->andWhere('post.slug = :slug')
             ->setParameter('slug', $slug);
-        if ($categoryEntity) {
+        if ($categoryEntity !== null) {
             $qb->andWhere('post.category = :category')
                 ->setParameter('category', $categoryEntity);
         }
+
         $qb->setMaxResults(1);
-        if ($returnQueryBuilder){
+        if ($returnQueryBuilder) {
             return $qb;
         }
+
         return $qb->getQuery()
             ->useResultCache($this->cacheEnabled, $this->cacheTtl)
             ->getOneOrNullResult();
     }
-
 }

@@ -12,33 +12,26 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class BlogListener implements EventSubscriberInterface
 {
-
     /**
-     * @var PostRepository
+     * @param mixed[] $config
      */
-    private $postRepository;
-
-    /**
-     * @var CategoryRepository
-     */
-    private $categoryRepository;
-
-    /**
-     * @var array
-     */
-    private $config;
-
-    public function __construct(PostRepository $postRepository, CategoryRepository $categoryRepository, $config)
-    {
-        $this->postRepository    = $postRepository;
-        $this->categoryRepository    = $categoryRepository;
-        $this->config    = $config;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PostRepository $postRepository,
+        /**
+         * @readonly
+         */
+        private CategoryRepository $categoryRepository,
+        private $config
+    ) {
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::REQUEST => ['setRequestLayout', 33],
@@ -53,19 +46,19 @@ class BlogListener implements EventSubscriberInterface
         $path = $request->getPathInfo();
         $host = $request->getHost();
 
-        if(strpos($path, $this->config["root_path"]) === false){
+        if (!str_contains($path, (string) $this->config["root_path"])) {
             return;
         }
 
-        $prefixes = preg_split('~/~', $this->config["root_path"], -1, PREG_SPLIT_NO_EMPTY);
+        $prefixes = preg_split('#/#', (string) $this->config["root_path"], -1, PREG_SPLIT_NO_EMPTY);
         /** @var PostEntity[] $pages */
-        $slugsArray = preg_split('~/~', $path, -1, PREG_SPLIT_NO_EMPTY);
+        $slugsArray = preg_split('#/#', $path, -1, PREG_SPLIT_NO_EMPTY);
 
-        if($this->config["root_path"] != "/"){
+        if ($this->config["root_path"] != "/") {
             $slugsArray = array_values(array_diff($slugsArray, $prefixes));
         }
 
-        if(!empty($slugsArray)) {
+        if (!empty($slugsArray)) {
             $category = $this->categoryRepository->getBySlug($slugsArray[0]);
             if ($category instanceof CategoryEntity) {
                 $event->getRequest()->attributes->set('_easy_blog_category', $category);
@@ -77,12 +70,8 @@ class BlogListener implements EventSubscriberInterface
                     }
                 }
             }
-        }else{
-            if(!empty($prefixes) && (count($slugsArray) === 0)){
-                $event->getRequest()->attributes->set('_easy_blog_root', true);
-            }
+        } elseif (!empty($prefixes) && ((is_countable($slugsArray) ? count($slugsArray) : 0) === 0)) {
+            $event->getRequest()->attributes->set('_easy_blog_root', true);
         }
-
-
     }
 }

@@ -15,8 +15,8 @@ class PostController extends AbstractController
     public static function getSubscribedServices(): array
     {
         return array_merge(parent::getSubscribedServices(), [
-            'event_dispatcher' => '?'.EventDispatcherInterface::class,
-            'easy_seo.breadcrumb' => '?'.BreadcrumbCollection::class,
+            'event_dispatcher' => '?' . EventDispatcherInterface::class,
+            'easy_seo.breadcrumb' => '?' . BreadcrumbCollection::class,
         ]);
     }
 
@@ -48,5 +48,4 @@ class PostController extends AbstractController
 
         return $this->render($result->getTemplate(), $result->getArgs());
     }
-
 }

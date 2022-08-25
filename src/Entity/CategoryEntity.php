@@ -15,8 +15,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[UniqueEntity('slug')]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\MappedSuperclass(repositoryClass: 'Adeliom\EasyBlogBundle\Repository\PostRepository')]
-class CategoryEntity
+#[ORM\MappedSuperclass(repositoryClass: \Adeliom\EasyBlogBundle\Repository\PostRepository::class)]
+class CategoryEntity implements \Stringable
 {
     use EntityIdTrait;
     use EntityTimestampableTrait {
@@ -27,35 +27,41 @@ class CategoryEntity
     use EntitySeoTrait {
         EntitySeoTrait::__construct as private __SEOConstruct;
     }
+
     /**
      * @var PostEntity[]|ArrayCollection
      */
     protected $posts;
+
     /**
      * @var string|null
      */
-    #[ORM\Column(name: 'css', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'css', type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
     #[Assert\Type('string')]
-    protected $css;
+    protected ?string $css = null;
+
     /**
      * @var string|null
      */
-    #[ORM\Column(name: 'js', type: 'text', nullable: true)]
+    #[ORM\Column(name: 'js', type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
     #[Assert\Type('string')]
-    protected $js;
+    protected ?string $js = null;
+
     public function __construct()
     {
-        $this->__TimestampableConstruct();
-        $this->__SEOConstruct();
+        $this->TimestampableConstruct();
+        $this->SEOConstruct();
         $this->posts     = new ArrayCollection();
     }
+
     /**
      * @return PostEntity[]|ArrayCollection
      */
-    public function getPosts()
+    public function getPosts(): array|\Doctrine\Common\Collections\ArrayCollection
     {
         return $this->posts;
     }
+
     public function addPost(PostEntity $post): void
     {
         $this->posts->add($post);
@@ -63,56 +69,52 @@ class CategoryEntity
             $post->setCategory($this);
         }
     }
+
     public function removePost(PostEntity $post): void
     {
         $this->posts->removeElement($post);
         $post->setCategory(null);
     }
-    /**
-     * @return string|null
-     */
+
     public function getCss(): ?string
     {
         return $this->css;
     }
-    /**
-     * @param string $css
-     */
+
     public function setCss(string $css): void
     {
         $this->css = $css;
     }
-    /**
-     * @return string|null
-     */
+
     public function getJs(): ?string
     {
         return $this->js;
     }
-    /**
-     * @param string $js
-     */
+
     public function setJs(string $js): void
     {
         $this->js = $js;
     }
+
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function setSeoTitle(LifecycleEventArgs $event) : void
+    public function setSeoTitle(LifecycleEventArgs $event): void
     {
-        if(empty($this->getSEO()->title)){
+        if (empty($this->getSEO()->title)) {
             $this->getSEO()->title = $this->getName();
         }
     }
+
     #[ORM\PreRemove]
-    public function onRemove(LifecycleEventArgs $event) : void
+    public function onRemove(LifecycleEventArgs $event): void
     {
         $this->setStatus(false);
-        $this->setName($this->getName() . '-'.$this->getId().'-deleted');
-        $this->setSlug($this->getSlug() . '-'.$this->getId().'-deleted');
+        $this->setName($this->getName() . '-' . $this->getId() . '-deleted');
+        $this->setSlug($this->getSlug() . '-' . $this->getId() . '-deleted');
     }
-    public function __toString()
+
+    public function __toString(): string
     {
-        return $this->getName();
+        return (string) $this->getName();
     }
 }

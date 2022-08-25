@@ -2,7 +2,6 @@
 
 namespace Adeliom\EasyBlogBundle\Controller\Admin;
 
-
 use Adeliom\EasyCommonBundle\Enum\ThreeStateStatusEnum;
 use Adeliom\EasyFieldsBundle\Admin\Field\AssociationField;
 use Adeliom\EasyFieldsBundle\Admin\Field\EnumField;
@@ -19,7 +18,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 
 abstract class PostCrudController extends AbstractCrudController
 {
-
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
@@ -49,6 +47,7 @@ abstract class PostCrudController extends AbstractCrudController
                 $actions->add($page, $action->getAsConfigObject());
             }
         }
+
         return $actions;
     }
 

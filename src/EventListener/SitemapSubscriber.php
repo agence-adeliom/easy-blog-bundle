@@ -12,61 +12,43 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SitemapSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    /**
-     * @var PostRepository
-     */
-    private $postRepository;
-
-    /**
-     * @var CategoryRepository
-     */
-    private $categoryRepository;
-
-    /**
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param PostRepository  $postRepository
-     * @param CategoryRepository  $categoryRepository
-     */
-    public function __construct(UrlGeneratorInterface $urlGenerator, PostRepository $postRepository, CategoryRepository $categoryRepository)
-    {
-        $this->urlGenerator = $urlGenerator;
-        $this->postRepository = $postRepository;
-        $this->categoryRepository = $categoryRepository;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private UrlGeneratorInterface $urlGenerator,
+        /**
+         * @readonly
+         */
+        private PostRepository $postRepository,
+        /**
+         * @readonly
+         */
+        private CategoryRepository $categoryRepository
+    ) {
     }
 
     /**
      * @inheritdoc
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
-            SitemapPopulateEvent::ON_SITEMAP_POPULATE => 'populate',
+            SitemapPopulateEvent::class => 'populate',
         ];
     }
 
-    /**
-     * @param SitemapPopulateEvent $event
-     */
     public function populate(SitemapPopulateEvent $event): void
     {
         $this->registerBlogCategoriesUrls($event->getUrlContainer());
         $this->registerBlogPostsUrls($event->getUrlContainer());
     }
 
-    /**
-     * @param UrlContainerInterface $urls
-     */
     public function registerBlogCategoriesUrls(UrlContainerInterface $urls): void
     {
         $categories = $this->categoryRepository->getPublished();
-
         foreach ($categories as $category) {
-            if($category->getSEO()->sitemap) {
+            if ($category->getSEO()->sitemap) {
                 $urls->addUrl(
                     new UrlConcrete(
                         $this->urlGenerator->generate(
@@ -81,20 +63,17 @@ class SitemapSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @param UrlContainerInterface $urls
-     */
     public function registerBlogPostsUrls(UrlContainerInterface $urls): void
     {
         $posts = $this->postRepository->getPublished();
 
         foreach ($posts as $post) {
-            if($post->getSEO()->sitemap) {
+            if ($post->getSEO()->sitemap) {
                 $urls->addUrl(
                     new UrlConcrete(
                         $this->urlGenerator->generate(
                             'easy_blog_post_index',
-                            ['post' => $post->getSlug(), 'category' => $post->getCategory()->getSlug()],
+                            ['post' => $post->getSlug(), 'category' => $post->getCategory()?->getSlug()],
                             UrlGeneratorInterface::ABSOLUTE_URL
                         )
                     ),

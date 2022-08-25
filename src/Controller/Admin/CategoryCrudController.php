@@ -2,7 +2,6 @@
 
 namespace Adeliom\EasyBlogBundle\Controller\Admin;
 
-
 use Adeliom\EasySeoBundle\Admin\Field\SEOField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -16,7 +15,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 
 abstract class CategoryCrudController extends AbstractCrudController
 {
-
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
@@ -44,6 +42,7 @@ abstract class CategoryCrudController extends AbstractCrudController
                 $actions->add($page, $action->getAsConfigObject());
             }
         }
+
         return $actions;
     }
 

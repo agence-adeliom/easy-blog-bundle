@@ -6,9 +6,8 @@ use Adeliom\EasyBlogBundle\Entity\CategoryEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
-
-class CategoryRepository extends ServiceEntityRepository {
-
+class CategoryRepository extends ServiceEntityRepository
+{
     /**
      * @var bool
      */
@@ -19,18 +18,12 @@ class CategoryRepository extends ServiceEntityRepository {
      */
     protected $cacheTtl;
 
-    /**
-     * @param array $cacheConfig
-     */
     public function setConfig(array $cacheConfig)
     {
         $this->cacheEnabled = $cacheConfig['enabled'];
         $this->cacheTtl     = $cacheConfig['ttl'];
     }
 
-    /**
-     * @return QueryBuilder
-     */
     public function getPublishedQuery(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('category')
