@@ -8,12 +8,14 @@ use Adeliom\EasyFieldsBundle\Admin\Field\EnumField;
 use Adeliom\EasySeoBundle\Admin\Field\SEOField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 
 abstract class PostCrudController extends AbstractCrudController
@@ -22,9 +24,6 @@ abstract class PostCrudController extends AbstractCrudController
     {
         return $crud
             ->addFormTheme('@EasyFields/form/association_widget.html.twig')
-            ->addFormTheme('@EasyCommon/crud/custom_panel.html.twig')
-            ->addFormTheme('@EasyEditor/form/editor_widget.html.twig')
-
             ->setPageTitle(Crud::PAGE_INDEX, 'easy.blog.admin.crud.title.article.'.Crud::PAGE_INDEX)
             ->setPageTitle(Crud::PAGE_EDIT, 'easy.blog.admin.crud.title.article.'.Crud::PAGE_EDIT)
             ->setPageTitle(Crud::PAGE_NEW, 'easy.blog.admin.crud.title.article.'.Crud::PAGE_NEW)
@@ -32,6 +31,12 @@ abstract class PostCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('easy.blog.admin.crud.label.article.singular')
             ->setEntityLabelInPlural('easy.blog.admin.crud.label.article.plural')
         ;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        $filters->add(ChoiceFilter::new('state', 'Status')->setChoices(ThreeStateStatusEnum::toArray()));
+        return $filters;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -56,17 +61,30 @@ abstract class PostCrudController extends AbstractCrudController
         $subject = $context->getEntity();
 
         yield IdField::new('id')->hideOnForm();
+
+        yield FormField::addTab('easy.blog.admin.panel.information');
         yield from $this->informationsFields($pageName, $subject);
+        yield FormField::addTab('easy.blog.admin.panel.publication');
         yield from $this->seoFields($pageName, $subject);
-        yield from $this->publishFields($pageName, $subject);
         yield from $this->metadataFields($pageName, $subject);
+        yield from $this->publishFields($pageName, $subject);
     }
 
     public function informationsFields(string $pageName, $subject): iterable
     {
-        yield FormField::addPanel('easy.blog.admin.panel.information')->addCssClass('col-12');
         yield TextField::new('name', 'easy.blog.admin.field.name')
             ->setRequired(true)
+            ->setColumns(12);
+    }
+
+    public function metadataFields(string $pageName, $subject): iterable
+    {
+        yield FormField::addPanel('easy.blog.admin.panel.metadatas')->addCssClass('col-4');
+        yield SlugField::new('slug', 'easy.blog.admin.field.slug')
+            ->setRequired(true)
+            ->hideOnIndex()
+            ->setTargetFieldName('name')
+            ->setUnlockConfirmationMessage('easy.blog.admin.field.slug_edit')
             ->setColumns(12);
         yield AssociationField::new('category', 'easy.blog.admin.field.category')
             ->listSelector(true)
@@ -74,26 +92,15 @@ abstract class PostCrudController extends AbstractCrudController
             ->setCrudController($this->getParameter('easy_blog.category.crud'));
     }
 
-    public function metadataFields(string $pageName, $subject): iterable
-    {
-        yield FormField::addPanel('easy.blog.admin.panel.metadatas')->collapsible()->addCssClass('col-4');
-        yield SlugField::new('slug', 'easy.blog.admin.field.slug')
-            ->setRequired(true)
-            ->hideOnIndex()
-            ->setTargetFieldName('name')
-            ->setUnlockConfirmationMessage('easy.blog.admin.field.slug_edit')
-            ->setColumns(12);
-    }
-
     public function seoFields(string $pageName, $subject): iterable
     {
-        yield FormField::addPanel('easy.blog.admin.panel.seo')->collapsible()->addCssClass('col-4');
+        yield FormField::addPanel('easy.blog.admin.panel.seo')->addCssClass('col-4');
         yield SEOField::new('seo');
     }
 
     public function publishFields(string $pageName, $subject): iterable
     {
-        yield FormField::addPanel('easy.blog.admin.panel.publication')->collapsible()->addCssClass('col-4');
+        yield FormField::addPanel('easy.blog.admin.panel.publication')->addCssClass('col-4');
         yield EnumField::new('state', 'easy.blog.admin.field.state')
             ->setEnum(ThreeStateStatusEnum::class)
             ->setRequired(true)

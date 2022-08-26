@@ -2,15 +2,18 @@
 
 namespace Adeliom\EasyBlogBundle\Controller\Admin;
 
+use Adeliom\EasyCommonBundle\Enum\ThreeStateStatusEnum;
 use Adeliom\EasySeoBundle\Admin\Field\SEOField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 
 abstract class CategoryCrudController extends AbstractCrudController
@@ -18,7 +21,6 @@ abstract class CategoryCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->addFormTheme('@EasyCommon/crud/custom_panel.html.twig')
             ->addFormTheme('@EasyMedia/form/easy-media.html.twig')
 
             ->setPageTitle(Crud::PAGE_INDEX, 'easy.blog.admin.crud.title.category.'.Crud::PAGE_INDEX)
@@ -28,6 +30,12 @@ abstract class CategoryCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('easy.blog.admin.crud.label.category.singular')
             ->setEntityLabelInPlural('easy.blog.admin.crud.label.category.plural')
         ;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        $filters->add(ChoiceFilter::new('state', 'Status')->setChoices(ThreeStateStatusEnum::toArray()));
+        return $filters;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -52,15 +60,17 @@ abstract class CategoryCrudController extends AbstractCrudController
         $subject = $context->getEntity();
 
         yield IdField::new('id')->hideOnForm();
+
+        yield FormField::addTab('easy.blog.admin.panel.information');
         yield from $this->informationsFields($pageName, $subject);
-        yield from $this->metadataFields($pageName, $subject);
+        yield FormField::addTab('easy.blog.admin.panel.publication');
         yield from $this->seoFields($pageName, $subject);
+        yield from $this->metadataFields($pageName, $subject);
         yield from $this->publishFields($pageName, $subject);
     }
 
     public function informationsFields(string $pageName, $subject): iterable
     {
-        yield FormField::addPanel('easy.blog.admin.panel.information')->addCssClass('col-8');
         yield TextField::new('name', 'easy.blog.admin.field.name')
             ->setRequired(true)
             ->setColumns(12);
