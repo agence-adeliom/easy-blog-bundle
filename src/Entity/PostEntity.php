@@ -14,55 +14,43 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @UniqueEntity("slug")
- * @ORM\HasLifecycleCallbacks()
- * @ORM\MappedSuperclass(repositoryClass="Adeliom\EasyBlogBundle\Repository\PostRepository")
- */
-class PostEntity {
-
+#[UniqueEntity('slug')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\MappedSuperclass(repositoryClass: \Adeliom\EasyBlogBundle\Repository\PostRepository::class)]
+class PostEntity
+{
     use EntityIdTrait;
     use EntityTimestampableTrait {
-        EntityTimestampableTrait::__construct as private __TimestampableConstruct;
+        EntityTimestampableTrait::__construct as private TimestampableConstruct;
     }
-
     use EntityNameSlugTrait;
     use EntityThreeStateStatusTrait;
     use EntityPublishableTrait {
-        EntityPublishableTrait::__construct as private __PublishableConstruct;
+        EntityPublishableTrait::__construct as private PublishableConstruct;
     }
-
     use EntitySeoTrait {
-        EntitySeoTrait::__construct as private __SEOConstruct;
+        EntitySeoTrait::__construct as private SEOConstruct;
     }
 
     /**
-     * @var null|CategoryEntity
-     * @Assert\Type(CategoryEntity::class)
+     * @var CategoryEntity|null
      */
+    #[Assert\Type(CategoryEntity::class)]
     protected $category;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="css", type="text", nullable=true)
-     * @Assert\Type("string")
-     */
-    protected $css;
+    #[ORM\Column(name: 'css', type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[Assert\Type('string')]
+    protected ?string $css = null;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="js", type="text", nullable=true)
-     * @Assert\Type("string")
-     */
-    protected $js;
+    #[ORM\Column(name: 'js', type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[Assert\Type('string')]
+    protected ?string $js = null;
 
     public function __construct()
     {
-        $this->__TimestampableConstruct();
-        $this->__PublishableConstruct();
-        $this->__SEOConstruct();
+        $this->TimestampableConstruct();
+        $this->PublishableConstruct();
+        $this->SEOConstruct();
     }
 
     public function getCategory(): ?CategoryEntity
@@ -75,57 +63,40 @@ class PostEntity {
         $this->category = $category;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCss(): ?string
     {
         return $this->css;
     }
 
-    /**
-     * @param string $css
-     */
     public function setCss(string $css): void
     {
         $this->css = $css;
     }
 
-    /**
-     * @return string|null
-     */
     public function getJs(): ?string
     {
         return $this->js;
     }
 
-    /**
-     * @param string $js
-     */
     public function setJs(string $js): void
     {
         $this->js = $js;
     }
 
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function setSeoTitle(LifecycleEventArgs $event): void
     {
-        if(empty($this->getSEO()->title)){
+        if (empty($this->getSEO()->title)) {
             $this->getSEO()->title = $this->getName();
         }
     }
 
-
-    /**
-     * @ORM\PreRemove()
-     */
+    #[ORM\PreRemove]
     public function onRemove(LifecycleEventArgs $event): void
     {
         $this->setState(ThreeStateStatusEnum::UNPUBLISHED());
-        $this->setName($this->getName() . '-'.$this->getId().'-deleted');
-        $this->setSlug($this->getSlug() . '-'.$this->getId().'-deleted');
+        $this->setName($this->getName().'-'.$this->getId().'-deleted');
+        $this->setSlug($this->getSlug().'-'.$this->getId().'-deleted');
     }
 }

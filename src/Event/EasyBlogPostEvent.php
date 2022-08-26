@@ -7,23 +7,15 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class EasyBlogPostEvent extends Event
 {
+    /**
+     * @var string
+     */
+    public const NAME = 'easyblog.post.before_render';
 
-    public const NAME = "easyblog.post.before_render";
-
-    protected $post;
-    protected $args;
-    protected $template;
-
-    public function __construct(PostEntity $post, $args, $template)
+    public function __construct(protected PostEntity $post, protected $args, protected $template)
     {
-        $this->post = $post;
-        $this->args = $args;
-        $this->template = $template;
     }
 
-    /**
-     * @return PostEntity
-     */
     public function getPost(): PostEntity
     {
         return $this->post;
@@ -54,5 +46,4 @@ class EasyBlogPostEvent extends Event
     {
         $this->template = $template;
     }
-
 }

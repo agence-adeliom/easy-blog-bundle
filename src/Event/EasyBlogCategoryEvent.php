@@ -7,23 +7,15 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class EasyBlogCategoryEvent extends Event
 {
+    /**
+     * @var string
+     */
+    public const NAME = 'easyblog.category.before_render';
 
-    public const NAME = "easyblog.category.before_render";
-
-    protected $category;
-    protected $args;
-    protected $template;
-
-    public function __construct(?CategoryEntity $category, $args, $template)
+    public function __construct(protected ?CategoryEntity $category, protected $args, protected $template)
     {
-        $this->category = $category;
-        $this->args = $args;
-        $this->template = $template;
     }
 
-    /**
-     * @return CategoryEntity|null
-     */
     public function getPost(): ?CategoryEntity
     {
         return $this->category;
@@ -54,6 +46,4 @@ class EasyBlogCategoryEvent extends Event
     {
         $this->template = $template;
     }
-
-
 }

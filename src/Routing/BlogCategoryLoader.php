@@ -2,7 +2,6 @@
 
 namespace Adeliom\EasyBlogBundle\Routing;
 
-
 use Adeliom\EasyBlogBundle\Repository\CategoryRepository;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
@@ -10,36 +9,30 @@ use Symfony\Component\Routing\RouteCollection;
 
 class BlogCategoryLoader extends Loader
 {
-    private $isLoaded = false;
+    private bool $isLoaded = false;
 
-    private $controller;
-    private $entity;
-    private $repository;
-    private $config;
-
-
-    public function __construct(string $controller, string $entity, CategoryRepository $repository, array $config, string $env = null)
-    {
+    public function __construct(
+        private string $controller,
+        private string $entity,
+        private CategoryRepository $repository,
+        private array $config,
+        string $env = null
+    ) {
         parent::__construct($env);
-
-        $this->controller = $controller;
-        $this->config = $config;
-        $this->entity = $entity;
-        $this->repository = $repository;
     }
 
-    public function load($resource, string $type = null)
+    public function load($resource, string $type = null): RouteCollection
     {
-        if (true === $this->isLoaded) {
+        if ($this->isLoaded) {
             throw new \RuntimeException('Do not add the "easy_blog_category" loader twice');
         }
 
         $routes = new RouteCollection();
 
         // prepare a new route
-        $path = $this->config['root_path'] . '/{category}';
+        $path = $this->config['root_path'].'/{category}';
         $defaults = [
-            '_controller' => $this->controller . '::index',
+            '_controller' => $this->controller.'::index',
             'category' => '',
         ];
         $requirements = [
@@ -55,7 +48,7 @@ class BlogCategoryLoader extends Loader
         return $routes;
     }
 
-    public function supports($resource, string $type = null)
+    public function supports($resource, string $type = null): bool
     {
         return 'easy_blog_category' === $type;
     }

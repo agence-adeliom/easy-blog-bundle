@@ -14,6 +14,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CategoryController extends AbstractController
 {
+    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry)
+    {
+    }
 
     public static function getSubscribedServices(): array
     {
@@ -27,49 +30,49 @@ class CategoryController extends AbstractController
     {
         $request->setLocale($_locale ?: $request->getLocale());
 
-        if($request->attributes->get("_easy_blog_root")){
+        if ($request->attributes->get('_easy_blog_root')) {
             return $this->blogRoot($request);
         }
 
-        $breadcrumb = $this->get('easy_seo.breadcrumb');
-        $breadcrumb->addRouteItem('homepage', ['route' => "easy_page_index"]);
-        $breadcrumb->addRouteItem('blog', ['route' => "easy_blog_category_index"]);
+        $breadcrumb = $this->container->get('easy_seo.breadcrumb');
+        $breadcrumb->addRouteItem('homepage', ['route' => 'easy_page_index']);
+        $breadcrumb->addRouteItem('blog', ['route' => 'easy_blog_category_index']);
 
         $template = '@EasyBlog/front/category.html.twig';
 
-        $category = $request->attributes->get("_easy_blog_category");
-        $postsQueryBuilder = $this->getDoctrine()->getRepository($this->getParameter('easy_blog.post.class'))->getByCategory($category, true);
+        $category = $request->attributes->get('_easy_blog_category');
+        $postsQueryBuilder = $this->managerRegistry->getRepository($this->getParameter('easy_blog.post.class'))->getByCategory($category, true);
 
         $pagerfanta = new Pagerfanta(
             new QueryAdapter($postsQueryBuilder)
         );
 
-        $breadcrumb->addRouteItem($category->getName(), ['route' => "easy_blog_category_index", 'params' => ['category' => $category->getSlug()]]);
+        $breadcrumb->addRouteItem($category->getName(), ['route' => 'easy_blog_category_index', 'params' => ['category' => $category->getSlug()]]);
 
         $args = [
             'category' => $category,
-            'posts'  => $pagerfanta,
-            'breadcrumb' => $breadcrumb
+            'posts' => $pagerfanta,
+            'breadcrumb' => $breadcrumb,
         ];
         $event = new EasyBlogCategoryEvent($category, $args, $template);
         /**
          * @var EasyBlogCategoryEvent $result;
          */
-        $result = $this->get("event_dispatcher")->dispatch($event, EasyBlogCategoryEvent::NAME);
+        $result = $this->container->get('event_dispatcher')->dispatch($event, EasyBlogCategoryEvent::NAME);
 
         return $this->render($result->getTemplate(), $result->getArgs());
     }
 
-    public function blogRoot(Request $request) : Response
+    public function blogRoot(Request $request): Response
     {
         $template = '@EasyBlog/front/root.html.twig';
 
-        $breadcrumb = $this->get('easy_seo.breadcrumb');
-        $breadcrumb->addRouteItem('homepage', ['route' => "easy_page_index"]);
-        $breadcrumb->addRouteItem('blog', ['route' => "easy_blog_category_index"]);
+        $breadcrumb = $this->container->get('easy_seo.breadcrumb');
+        $breadcrumb->addRouteItem('homepage', ['route' => 'easy_page_index']);
+        $breadcrumb->addRouteItem('blog', ['route' => 'easy_blog_category_index']);
 
-        $categories = $this->getDoctrine()->getRepository($this->getParameter('easy_blog.category.class'))->getPublished();
-        $postsQueryBuilder = $this->getDoctrine()->getRepository($this->getParameter('easy_blog.post.class'))->getPublished(true);
+        $categories = $this->managerRegistry->getRepository($this->getParameter('easy_blog.category.class'))->getPublished();
+        $postsQueryBuilder = $this->managerRegistry->getRepository($this->getParameter('easy_blog.post.class'))->getPublished(true);
 
         $pagerfanta = new Pagerfanta(
             new QueryAdapter($postsQueryBuilder)
@@ -77,18 +80,18 @@ class CategoryController extends AbstractController
 
         $args = [
             'categories' => $categories,
-            'posts'  => $pagerfanta,
-            'page'  => [
+            'posts' => $pagerfanta,
+            'page' => [
                 'name' => null,
-                'seo' => new SEO()
+                'seo' => new SEO(),
             ],
-            'breadcrumb' => $breadcrumb
+            'breadcrumb' => $breadcrumb,
         ];
         $event = new EasyBlogCategoryEvent(null, $args, $template);
         /**
          * @var EasyBlogCategoryEvent $result;
          */
-        $result = $this->get("event_dispatcher")->dispatch($event, EasyBlogCategoryEvent::NAME);
+        $result = $this->container->get('event_dispatcher')->dispatch($event, EasyBlogCategoryEvent::NAME);
 
         return $this->render($result->getTemplate(), $result->getArgs());
     }

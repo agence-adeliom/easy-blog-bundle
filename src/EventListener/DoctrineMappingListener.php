@@ -2,7 +2,6 @@
 
 namespace Adeliom\EasyBlogBundle\EventListener;
 
-
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
@@ -14,23 +13,19 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class DoctrineMappingListener implements EventSubscriber
 {
-    /**
-     * @var string
-     */
-    private $postClass;
-
-    /**
-     * @var string
-     */
-    private $categoryClass;
-
-    public function __construct(string $postClass, string $categoryClass)
-    {
-        $this->postClass = $postClass;
-        $this->categoryClass = $categoryClass;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $postClass,
+        /**
+         * @readonly
+         */
+        private string $categoryClass
+    ) {
     }
 
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [Events::loadClassMetadata];
     }
@@ -40,7 +35,7 @@ class DoctrineMappingListener implements EventSubscriber
         /** @var ClassMetadata $classMetadata */
         $classMetadata = $eventArgs->getClassMetadata();
 
-        $isPost     = is_a($classMetadata->getName(), $this->postClass, true);
+        $isPost = is_a($classMetadata->getName(), $this->postClass, true);
         $isCategory = is_a($classMetadata->getName(), $this->categoryClass, true);
 
         if ($isPost) {
@@ -72,6 +67,5 @@ class DoctrineMappingListener implements EventSubscriber
                 'mappedBy' => 'category',
             ]);
         }
-
     }
 }

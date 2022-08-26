@@ -8,9 +8,8 @@ use Adeliom\EasyCommonBundle\Enum\ThreeStateStatusEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
-
-class PostRepository extends ServiceEntityRepository {
-
+class PostRepository extends ServiceEntityRepository
+{
     /**
      * @var bool
      */
@@ -21,22 +20,16 @@ class PostRepository extends ServiceEntityRepository {
      */
     protected $cacheTtl;
 
-    /**
-     * @param array $cacheConfig
-     */
     public function setConfig(array $cacheConfig)
     {
         $this->cacheEnabled = $cacheConfig['enabled'];
-        $this->cacheTtl     = $cacheConfig['ttl'];
+        $this->cacheTtl = $cacheConfig['ttl'];
     }
 
-    /**
-     * @return QueryBuilder
-     */
     public function getPublishedQuery(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('post')
-            ->innerJoin('post.category', "category")
+            ->innerJoin('post.category', 'category')
             ->where('post.state = :state')
             ->andWhere('post.publishDate < :publishDate')
             ->andWhere('category.status = :categoryActive')
@@ -47,7 +40,6 @@ class PostRepository extends ServiceEntityRepository {
         $orModule->add($qb->expr()->isNull('post.unpublishDate'));
 
         $qb->andWhere($orModule);
-
 
         $qb->setParameter('categoryActive', true);
         $qb->setParameter('state', ThreeStateStatusEnum::PUBLISHED());
@@ -63,9 +55,10 @@ class PostRepository extends ServiceEntityRepository {
     public function getPublished(bool $returnQueryBuilder = false)
     {
         $qb = $this->getPublishedQuery();
-        if ($returnQueryBuilder){
+        if ($returnQueryBuilder) {
             return $qb;
         }
+
         return $qb->getQuery()
             ->useResultCache($this->cacheEnabled, $this->cacheTtl)
             ->getResult();
@@ -80,9 +73,10 @@ class PostRepository extends ServiceEntityRepository {
         $qb->andWhere('post.category = :category')
             ->setParameter('category', $categoryEntity)
         ;
-        if ($returnQueryBuilder){
+        if ($returnQueryBuilder) {
             return $qb;
         }
+
         return $qb->getQuery()
             ->useResultCache($this->cacheEnabled, $this->cacheTtl)
             ->getResult();
@@ -90,6 +84,7 @@ class PostRepository extends ServiceEntityRepository {
 
     /**
      * @return PostEntity
+     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getBySlug(string $slug, ?CategoryEntity $categoryEntity, bool $returnQueryBuilder = false)
@@ -97,17 +92,18 @@ class PostRepository extends ServiceEntityRepository {
         $qb = $this->getPublishedQuery();
         $qb->andWhere('post.slug = :slug')
             ->setParameter('slug', $slug);
-        if ($categoryEntity) {
+        if (null !== $categoryEntity) {
             $qb->andWhere('post.category = :category')
                 ->setParameter('category', $categoryEntity);
         }
+
         $qb->setMaxResults(1);
-        if ($returnQueryBuilder){
+        if ($returnQueryBuilder) {
             return $qb;
         }
+
         return $qb->getQuery()
             ->useResultCache($this->cacheEnabled, $this->cacheTtl)
             ->getOneOrNullResult();
     }
-
 }
