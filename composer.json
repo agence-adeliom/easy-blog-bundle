@@ -24,8 +24,8 @@
         "symfony/options-resolver": "^5.4 || ^6.0",
         "symfony/property-access": "^5.4 || ^6.0",
         "easycorp/easyadmin-bundle": "^3.4 || ^v4.0",
-        "agence-adeliom/easy-common-bundle": "^2.0.12",
-        "agence-adeliom/easy-page-bundle": "^2.0.12",
+        "agence-adeliom/easy-common-bundle": "^2.0.13",
+        "agence-adeliom/easy-page-bundle": "^2.0.13",
         "babdev/pagerfanta-bundle": "^3.0",
         "pagerfanta/twig": "^3.0",
         "pagerfanta/doctrine-orm-adapter": "^3.0"
