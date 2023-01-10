@@ -8,7 +8,9 @@ use Adeliom\EasyCommonBundle\Traits\EntityStatusTrait;
 use Adeliom\EasyCommonBundle\Traits\EntityTimestampableTrait;
 use Adeliom\EasySeoBundle\Traits\EntitySeoTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreRemoveEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -92,7 +94,7 @@ class CategoryEntity implements \Stringable
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function setSeoTitle(LifecycleEventArgs $event): void
+    public function setSeoTitle(PrePersistEventArgs|PreUpdateEventArgs $event): void
     {
         if (empty($this->getSEO()->title)) {
             $this->getSEO()->title = $this->getName();
@@ -100,7 +102,7 @@ class CategoryEntity implements \Stringable
     }
 
     #[ORM\PreRemove]
-    public function onRemove(LifecycleEventArgs $event): void
+    public function onRemove(PreRemoveEventArgs $event): void
     {
         $this->setStatus(false);
         $this->setName($this->getName().'-'.$this->getId().'-deleted');
