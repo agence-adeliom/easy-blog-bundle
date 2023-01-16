@@ -7,6 +7,7 @@ use Adeliom\EasySeoBundle\Admin\Field\SEOField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -55,10 +56,13 @@ abstract class CategoryCrudController extends AbstractCrudController
         return $actions;
     }
 
+    /**
+     * @return FieldInterface[]
+     */
     public function configureFields(string $pageName): iterable
     {
         $context = $this->container->get(AdminContextProvider::class)->getContext();
-        $subject = $context->getEntity();
+        $subject = $context?->getEntity();
 
         yield FormField::addTab('easy.blog.admin.panel.information');
         yield IdField::new('id')->hideOnForm();
@@ -69,14 +73,20 @@ abstract class CategoryCrudController extends AbstractCrudController
         yield from $this->publishFields($pageName, $subject);
     }
 
-    public function informationsFields(string $pageName, $subject): iterable
+    /**
+     * @return FieldInterface[]
+     */
+    public function informationsFields(string $pageName, object $subject): iterable
     {
         yield TextField::new('name', 'easy.blog.admin.field.name')
             ->setRequired(true)
             ->setColumns(12);
     }
 
-    public function metadataFields(string $pageName, $subject): iterable
+    /**
+     * @return FieldInterface[]
+     */
+    public function metadataFields(string $pageName, object $subject): iterable
     {
         yield FormField::addPanel('easy.blog.admin.panel.metadatas')->collapsible()->addCssClass('col-4');
         yield SlugField::new('slug', 'easy.blog.admin.field.slug')
@@ -87,13 +97,19 @@ abstract class CategoryCrudController extends AbstractCrudController
             ->setColumns(12);
     }
 
-    public function seoFields(string $pageName, $subject): iterable
+    /**
+     * @return FieldInterface[]
+     */
+    public function seoFields(string $pageName, object $subject): iterable
     {
         yield FormField::addPanel('easy.blog.admin.panel.seo')->collapsible()->addCssClass('col-4');
         yield SEOField::new('seo');
     }
 
-    public function publishFields(string $pageName, $subject): iterable
+    /**
+     * @return FieldInterface[]
+     */
+    public function publishFields(string $pageName, object $subject): iterable
     {
         yield FormField::addPanel('easy.blog.admin.panel.publication')->collapsible()->addCssClass('col-4');
         yield BooleanField::new('status', 'easy.blog.admin.field.state')
