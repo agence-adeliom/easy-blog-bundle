@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -76,7 +77,7 @@ abstract class CategoryCrudController extends AbstractCrudController
     /**
      * @return FieldInterface[]
      */
-    public function informationsFields(string $pageName, object $subject): iterable
+    public function informationsFields(string $pageName, ?EntityDto $subject): iterable
     {
         yield TextField::new('name', 'easy.blog.admin.field.name')
             ->setRequired(true)
@@ -86,7 +87,7 @@ abstract class CategoryCrudController extends AbstractCrudController
     /**
      * @return FieldInterface[]
      */
-    public function metadataFields(string $pageName, object $subject): iterable
+    public function metadataFields(string $pageName, ?EntityDto $subject): iterable
     {
         yield FormField::addPanel('easy.blog.admin.panel.metadatas')->collapsible()->addCssClass('col-4');
         yield SlugField::new('slug', 'easy.blog.admin.field.slug')
@@ -100,7 +101,7 @@ abstract class CategoryCrudController extends AbstractCrudController
     /**
      * @return FieldInterface[]
      */
-    public function seoFields(string $pageName, object $subject): iterable
+    public function seoFields(string $pageName, ?EntityDto $subject): iterable
     {
         yield FormField::addPanel('easy.blog.admin.panel.seo')->collapsible()->addCssClass('col-4');
         yield SEOField::new('seo');
@@ -109,7 +110,7 @@ abstract class CategoryCrudController extends AbstractCrudController
     /**
      * @return FieldInterface[]
      */
-    public function publishFields(string $pageName, object $subject): iterable
+    public function publishFields(string $pageName, ?EntityDto $subject): iterable
     {
         yield FormField::addPanel('easy.blog.admin.panel.publication')->collapsible()->addCssClass('col-4');
         yield BooleanField::new('status', 'easy.blog.admin.field.state')
