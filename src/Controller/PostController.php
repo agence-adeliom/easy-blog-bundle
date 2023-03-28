@@ -32,8 +32,8 @@ class PostController extends AbstractController
         $category = $request->attributes->get('_easy_blog_category');
         $post = $request->attributes->get('_easy_blog_post');
 
-        $breadcrumb->addRouteItem($category->getName(), ['route' => 'easy_blog_category_index', 'params' => ['category' => $category->getSlug()]]);
-        $breadcrumb->addRouteItem($post->getName(), ['route' => 'easy_blog_post_index', 'params' => ['category' => $post->getCategory()->getSlug(), 'post' => $post->getSlug()]]);
+        $breadcrumb->addRouteItem($category->getName(), ['route' => 'easy_blog_category_index', 'params' => ['category' => $category->getSlug()]], $category);
+        $breadcrumb->addRouteItem($post->getName(), ['route' => 'easy_blog_post_index', 'params' => ['category' => $post->getCategory()->getSlug(), 'post' => $post->getSlug()]], $post);
 
         $args = [
             'category' => $category,
