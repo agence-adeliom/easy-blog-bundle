@@ -24,7 +24,11 @@ class SitemapSubscriber implements EventSubscriberInterface
         /**
          * @readonly
          */
-        private CategoryRepository $categoryRepository
+        private CategoryRepository $categoryRepository,
+        /**
+         * @readonly
+         */
+        private bool $sitemap = true,
     ) {
     }
 
@@ -40,8 +44,11 @@ class SitemapSubscriber implements EventSubscriberInterface
 
     public function populate(SitemapPopulateEvent $event): void
     {
-        $this->registerBlogCategoriesUrls($event->getUrlContainer());
-        $this->registerBlogPostsUrls($event->getUrlContainer());
+
+        if ($this->sitemap) {
+            $this->registerBlogCategoriesUrls($event->getUrlContainer());
+            $this->registerBlogPostsUrls($event->getUrlContainer());
+        }
     }
 
     public function registerBlogCategoriesUrls(UrlContainerInterface $urls): void
