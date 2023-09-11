@@ -159,14 +159,8 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('root_path')->defaultValue('/blog')->end()
                     ->end()
                 ->end()
-                ->scalarNode('sitemap')
+                ->booleanNode('sitemap')
                     ->defaultValue(true)
-                    ->validate()
-                    ->ifString()
-                    ->then(function ($value) {
-                        return (bool) $value;
-                    })
-                    ->end()
                 ->end()
             ->end();
 
