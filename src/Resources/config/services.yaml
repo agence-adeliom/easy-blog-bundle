@@ -62,6 +62,7 @@ services:
             - "@router"
             - "@easy_blog.post.repository"
             - "@easy_blog.category.repository"
+            - "%easy_blog.sitemap%"
         tags:
             - { name: "kernel.event_subscriber", priority: 100 }
 
