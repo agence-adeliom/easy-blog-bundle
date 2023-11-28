@@ -54,7 +54,7 @@ services:
             - '%easy_blog.post.class%'
             - '%easy_blog.category.class%'
         tags:
-            - doctrine.event_subscriber
+            - { name: 'doctrine.event_listener', event: 'loadClassMetadata' }
 
     easy_blog.sitemap.subscriber:
         class: Adeliom\EasyBlogBundle\EventListener\SitemapSubscriber
