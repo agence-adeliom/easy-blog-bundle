@@ -42,7 +42,7 @@ class PostRepository extends ServiceEntityRepository
         $qb->andWhere($orModule);
 
         $qb->setParameter('categoryActive', true);
-        $qb->setParameter('state', ThreeStateStatusEnum::PUBLISHED());
+        $qb->setParameter('state', ThreeStateStatusEnum::PUBLISHED);
         $qb->setParameter('publishDate', new \DateTime());
         $qb->setParameter('unpublishDate', new \DateTime());
 

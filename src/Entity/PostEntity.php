@@ -100,7 +100,7 @@ class PostEntity
     #[ORM\PreRemove]
     public function onRemove(PreRemoveEventArgs $event): void
     {
-        $this->setState(ThreeStateStatusEnum::UNPUBLISHED());
+        $this->setState(ThreeStateStatusEnum::PUBLISHED);
         $this->setName($this->getName().'-'.$this->getId().'-deleted');
         $this->setSlug($this->getSlug().'-'.$this->getId().'-deleted');
     }
