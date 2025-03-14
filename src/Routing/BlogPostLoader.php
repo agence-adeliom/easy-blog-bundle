@@ -12,9 +12,9 @@ class BlogPostLoader extends Loader
     private bool $isLoaded = false;
 
     public function __construct(
-        private string $controller,
-        private string $entity,
-        private PostRepository $repository,
+        private readonly string $controller,
+        private readonly string $entity,
+        private readonly PostRepository $repository,
         private array $config,
         string $env = null
     ) {
@@ -30,7 +30,7 @@ class BlogPostLoader extends Loader
         $routes = new RouteCollection();
 
         // prepare a new route
-        $hasTrailingSlash = str_ends_with($this->config['root_path'], '/');
+        $hasTrailingSlash = str_ends_with((string) $this->config['root_path'], '/');
         $path = $this->config['root_path'].($hasTrailingSlash?'':'/').'{category}/{post}'.($hasTrailingSlash?'/':'');
         $defaults = [
             '_controller' => $this->controller.'::index',

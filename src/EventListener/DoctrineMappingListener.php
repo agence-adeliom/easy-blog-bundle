@@ -15,14 +15,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class DoctrineMappingListener
 {
     public function __construct(
-        /**
-         * @readonly
-         */
-        private string $postClass,
-        /**
-         * @readonly
-         */
-        private string $categoryClass
+        private readonly string $postClass,
+        private readonly string $categoryClass
     ) {
     }
 

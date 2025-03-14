@@ -59,11 +59,7 @@ class PostRepository extends ServiceEntityRepository
             return $qb;
         }
 
-        if ($this->cacheEnabled) {
-            $qb = $qb->getQuery()->enableResultCache($this->cacheTtl);
-        } else {
-            $qb = $qb->getQuery()->disableResultCache();
-        }
+        $qb = $this->cacheEnabled ? $qb->getQuery()->enableResultCache($this->cacheTtl) : $qb->getQuery()->disableResultCache();
 
         return $qb->getResult();
     }
@@ -81,11 +77,7 @@ class PostRepository extends ServiceEntityRepository
             return $qb;
         }
 
-        if ($this->cacheEnabled) {
-            $qb = $qb->getQuery()->enableResultCache($this->cacheTtl);
-        } else {
-            $qb = $qb->getQuery()->disableResultCache();
-        }
+        $qb = $this->cacheEnabled ? $qb->getQuery()->enableResultCache($this->cacheTtl) : $qb->getQuery()->disableResultCache();
 
         return $qb->getResult();
     }
@@ -100,7 +92,7 @@ class PostRepository extends ServiceEntityRepository
         $qb = $this->getPublishedQuery();
         $qb->andWhere('post.slug = :slug')
             ->setParameter('slug', $slug);
-        if (null !== $categoryEntity) {
+        if ($categoryEntity instanceof \Adeliom\EasyBlogBundle\Entity\CategoryEntity) {
             $qb->andWhere('post.category = :category')
                 ->setParameter('category', $categoryEntity);
         }

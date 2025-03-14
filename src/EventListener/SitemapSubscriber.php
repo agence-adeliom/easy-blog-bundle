@@ -13,22 +13,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class SitemapSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        /**
-         * @readonly
-         */
-        private UrlGeneratorInterface $urlGenerator,
-        /**
-         * @readonly
-         */
-        private PostRepository $postRepository,
-        /**
-         * @readonly
-         */
-        private CategoryRepository $categoryRepository,
-        /**
-         * @readonly
-         */
-        private bool $sitemap = true,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly PostRepository $postRepository,
+        private readonly CategoryRepository $categoryRepository,
+        private readonly bool $sitemap = true,
     ) {
     }
 

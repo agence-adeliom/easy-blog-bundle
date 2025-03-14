@@ -16,14 +16,8 @@ class BlogListener implements EventSubscriberInterface
      * @param mixed[] $config
      */
     public function __construct(
-        /**
-         * @readonly
-         */
-        private PostRepository $postRepository,
-        /**
-         * @readonly
-         */
-        private CategoryRepository $categoryRepository,
+        private readonly PostRepository $postRepository,
+        private readonly CategoryRepository $categoryRepository,
         private $config
     ) {
     }
@@ -58,7 +52,7 @@ class BlogListener implements EventSubscriberInterface
             $slugsArray = array_values(array_diff($slugsArray, $prefixes));
         }
 
-        if (!empty($slugsArray)) {
+        if ($slugsArray !== [] && $slugsArray !== false) {
             $category = $this->categoryRepository->getBySlug($slugsArray[0]);
             if ($category instanceof CategoryEntity) {
                 $event->getRequest()->attributes->set('_easy_blog_category', $category);
@@ -70,7 +64,7 @@ class BlogListener implements EventSubscriberInterface
                     }
                 }
             }
-        } elseif (!empty($prefixes) && ((is_countable($slugsArray) ? count($slugsArray) : 0) === 0)) {
+        } elseif ($prefixes !== [] && $prefixes !== false && ((is_countable($slugsArray) ? count($slugsArray) : 0) === 0)) {
             $event->getRequest()->attributes->set('_easy_blog_root', true);
         }
     }

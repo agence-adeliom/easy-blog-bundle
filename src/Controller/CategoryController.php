@@ -14,7 +14,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CategoryController extends AbstractController
 {
-    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry)
+    public function __construct(private readonly \Doctrine\Persistence\ManagerRegistry $managerRegistry)
     {
     }
 
