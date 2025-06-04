@@ -26,7 +26,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    public function index(Request $request, string $category = '', string $_locale = null): Response
+    public function index(Request $request, string $category = '', ?string $_locale = null): Response
     {
         $request->setLocale($_locale ?: $request->getLocale());
 

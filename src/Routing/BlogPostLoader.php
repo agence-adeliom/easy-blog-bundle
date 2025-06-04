@@ -21,7 +21,7 @@ class BlogPostLoader extends Loader
         parent::__construct($env);
     }
 
-    public function load($resource, string $type = null): RouteCollection
+    public function load($resource, ?string $type = null): RouteCollection
     {
         if ($this->isLoaded) {
             throw new \RuntimeException('Do not add the "easy_blog_post" loader twice');
@@ -48,7 +48,7 @@ class BlogPostLoader extends Loader
         return $routes;
     }
 
-    public function supports($resource, string $type = null): bool
+    public function supports($resource, ?string $type = null): bool
     {
         return 'easy_blog_post' === $type;
     }
