@@ -16,7 +16,7 @@ class BlogPostLoader extends Loader
         private readonly string $entity,
         private readonly PostRepository $repository,
         private array $config,
-        string $env = null
+        ?string $env = null
     ) {
         parent::__construct($env);
     }

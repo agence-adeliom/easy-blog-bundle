@@ -16,7 +16,7 @@ class BlogCategoryLoader extends Loader
         private readonly string $entity,
         private readonly CategoryRepository $repository,
         private array $config,
-        string $env = null
+        ?string $env = null
     ) {
         parent::__construct($env);
     }
