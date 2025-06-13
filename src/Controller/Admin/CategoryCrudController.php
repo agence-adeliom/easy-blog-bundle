@@ -89,7 +89,7 @@ abstract class CategoryCrudController extends AbstractCrudController
      */
     public function metadataFields(string $pageName, ?EntityDto $subject): iterable
     {
-        yield FormField::addPanel('easy.blog.admin.panel.metadatas')->collapsible()->addCssClass('col-4');
+        yield FormField::addFieldset('easy.blog.admin.panel.metadatas')->collapsible()->addCssClass('col-4');
         yield SlugField::new('slug', 'easy.blog.admin.field.slug')
             ->setRequired(true)
             ->hideOnIndex()
@@ -103,7 +103,7 @@ abstract class CategoryCrudController extends AbstractCrudController
      */
     public function seoFields(string $pageName, ?EntityDto $subject): iterable
     {
-        yield FormField::addPanel('easy.blog.admin.panel.seo')->collapsible()->addCssClass('col-4');
+        yield FormField::addFieldset('easy.blog.admin.panel.seo')->collapsible()->addCssClass('col-4');
         yield SEOField::new('seo');
     }
 
@@ -112,7 +112,7 @@ abstract class CategoryCrudController extends AbstractCrudController
      */
     public function publishFields(string $pageName, ?EntityDto $subject): iterable
     {
-        yield FormField::addPanel('easy.blog.admin.panel.publication')->collapsible()->addCssClass('col-4');
+        yield FormField::addFieldset('easy.blog.admin.panel.publication')->collapsible()->addCssClass('col-4');
         yield BooleanField::new('status', 'easy.blog.admin.field.state')
             ->renderAsSwitch(true);
     }
