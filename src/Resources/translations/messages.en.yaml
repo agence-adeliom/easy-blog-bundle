@@ -53,4 +53,5 @@ easy:
     front:
       categories: Catégories
       category: Catégorie
-      entries: Articles
+      articles: Articles
+      article: Article
