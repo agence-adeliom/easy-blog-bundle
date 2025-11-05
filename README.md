@@ -108,5 +108,6 @@ NOTE : You will need to clear your cache after change because the RouteLoader ne
 ## Authors
 
 - [@arnaud-ritti](https://github.com/arnaud-ritti)
+- [@jeandaviddaviet](https://github.com/JeanDavidDaviet)
 
   
