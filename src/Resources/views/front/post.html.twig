@@ -11,3 +11,7 @@
         </article>
     </section>
 {% endblock %}
+
+{% block seo_debug %}
+    {% include 'components/_seo_debug.html.twig' with { seo: post.seo } ignore missing %}
+{% endblock %}

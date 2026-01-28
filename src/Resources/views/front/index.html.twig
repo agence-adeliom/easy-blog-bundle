@@ -61,3 +61,7 @@
         {{ encore_entry_script_tags(asset_webpack) }}
     {% endfor %}
 {% endblock %}
+
+{% block seo_debug %}
+    {% include 'components/_seo_debug.html.twig' with { seo: page.seo } ignore missing %}
+{% endblock %}

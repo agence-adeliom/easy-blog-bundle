@@ -20,3 +20,7 @@
         </article>
     </section>
 {% endblock %}
+
+{% block seo_debug %}
+    {% include 'components/_seo_debug.html.twig' with { seo: category.seo } ignore missing %}
+{% endblock %}
