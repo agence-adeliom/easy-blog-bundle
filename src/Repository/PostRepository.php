@@ -102,8 +102,9 @@ class PostRepository extends ServiceEntityRepository
             return $qb;
         }
 
-        return $qb->getQuery()
-            ->useResultCache($this->cacheEnabled, $this->cacheTtl)
-            ->getOneOrNullResult();
+        $query = $qb->getQuery();
+        $query = $this->cacheEnabled ? $query->enableResultCache($this->cacheTtl) : $query->disableResultCache();
+
+        return $query->getOneOrNullResult();
     }
 }

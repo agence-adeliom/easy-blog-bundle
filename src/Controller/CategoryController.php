@@ -58,7 +58,7 @@ class CategoryController extends AbstractController
         /**
          * @var EasyBlogCategoryEvent $result;
          */
-        $result = $this->container->get('event_dispatcher')->dispatch($event, EasyBlogCategoryEvent::NAME);
+        $result = $this->container->get('event_dispatcher')->dispatch($event);
 
         return $this->render($result->getTemplate(), $result->getArgs());
     }
@@ -91,7 +91,7 @@ class CategoryController extends AbstractController
         /**
          * @var EasyBlogCategoryEvent $result;
          */
-        $result = $this->container->get('event_dispatcher')->dispatch($event, EasyBlogCategoryEvent::NAME);
+        $result = $this->container->get('event_dispatcher')->dispatch($event);
 
         return $this->render($result->getTemplate(), $result->getArgs());
     }

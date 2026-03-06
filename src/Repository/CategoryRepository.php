@@ -59,8 +59,9 @@ class CategoryRepository extends ServiceEntityRepository
             ->setParameter('slug', $slug)
             ->setMaxResults(1);
 
-        return $qb->getQuery()
-            ->useResultCache($this->cacheEnabled, $this->cacheTtl)
-            ->getOneOrNullResult();
+        $query = $qb->getQuery();
+        $query = $this->cacheEnabled ? $query->enableResultCache($this->cacheTtl) : $query->disableResultCache();
+
+        return $query->getOneOrNullResult();
     }
 }
