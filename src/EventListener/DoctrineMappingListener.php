@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Adeliom\EasyBlogBundle\EventListener;
 
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
@@ -50,7 +52,7 @@ class DoctrineMappingListener
 
     private function processCategoryMetadata(ClassMetadata $classMetadata): void
     {
-        if (!$classMetadata->hasAssociation('pages')) {
+        if (!$classMetadata->hasAssociation('posts')) {
             $classMetadata->mapOneToMany([
                 'fieldName' => 'posts',
                 'targetEntity' => $this->postClass,

@@ -15,24 +15,57 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(\Adeliom\EasyBlogBundle\EventListener\DoctrineMappingListener::class)]
 final class DoctrineMappingListenerTest extends TestCase
 {
-    public function testListenerMapsBlogAssociations(): void
+    public function testListenerMapsPostCategoryAssociation(): void
     {
         $listener = new DoctrineMappingListener(TestPost::class, TestCategory::class);
+        $metadata = $this->createMock(ClassMetadata::class);
+        $metadata->expects(self::exactly(2))
+            ->method('getName')
+            ->willReturn(TestPost::class);
+        $metadata->expects(self::once())
+            ->method('hasAssociation')
+            ->with('category')
+            ->willReturn(false);
+        $metadata->expects(self::once())
+            ->method('mapManyToOne')
+            ->with([
+                'fieldName' => 'category',
+                'targetEntity' => TestCategory::class,
+                'inversedBy' => 'posts',
+            ]);
 
-        $postMetadata = new ClassMetadata(TestPost::class);
-        $postEvent = $this->createMock(LoadClassMetadataEventArgs::class);
-        $postEvent->method('getClassMetadata')->willReturn($postMetadata);
+        $event = $this->createMock(LoadClassMetadataEventArgs::class);
+        $event->expects(self::once())
+            ->method('getClassMetadata')
+            ->willReturn($metadata);
 
-        $listener->loadClassMetadata($postEvent);
+        $listener->loadClassMetadata($event);
+    }
 
-        self::assertTrue($postMetadata->hasAssociation('category'));
+    public function testListenerMapsCategoryPostsAssociation(): void
+    {
+        $listener = new DoctrineMappingListener(TestPost::class, TestCategory::class);
+        $metadata = $this->createMock(ClassMetadata::class);
+        $metadata->expects(self::exactly(2))
+            ->method('getName')
+            ->willReturn(TestCategory::class);
+        $metadata->expects(self::once())
+            ->method('hasAssociation')
+            ->with('posts')
+            ->willReturn(false);
+        $metadata->expects(self::once())
+            ->method('mapOneToMany')
+            ->with([
+                'fieldName' => 'posts',
+                'targetEntity' => TestPost::class,
+                'mappedBy' => 'category',
+            ]);
 
-        $categoryMetadata = new ClassMetadata(TestCategory::class);
-        $categoryEvent = $this->createMock(LoadClassMetadataEventArgs::class);
-        $categoryEvent->method('getClassMetadata')->willReturn($categoryMetadata);
+        $event = $this->createMock(LoadClassMetadataEventArgs::class);
+        $event->expects(self::once())
+            ->method('getClassMetadata')
+            ->willReturn($metadata);
 
-        $listener->loadClassMetadata($categoryEvent);
-
-        self::assertTrue($categoryMetadata->hasAssociation('posts'));
+        $listener->loadClassMetadata($event);
     }
 }
