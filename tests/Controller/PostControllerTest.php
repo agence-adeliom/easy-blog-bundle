@@ -12,6 +12,7 @@ use Adeliom\EasySeoBundle\Services\BreadcrumbCollection;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -43,13 +44,12 @@ final class PostControllerTest extends TestCase
         $request->attributes->set('_easy_blog_post', $post);
 
         $breadcrumb = $this->createBreadcrumb();
-        $dispatcher = $this->createMock(EventDispatcherInterface::class);
-        $dispatcher->expects(self::once())
-            ->method('dispatch')
-            ->with(
-                self::callback(static fn (object $event): bool => $event instanceof EasyBlogPostEvent && $event->getPost() === $post)
-            )
-            ->willReturnArgument(0);
+        $dispatcher = new EventDispatcher();
+        $dispatchedEvent = null;
+        $dispatcher->addListener(EasyBlogPostEvent::class, static function (EasyBlogPostEvent $event) use (&$dispatchedEvent, $post): void {
+            TestCase::assertSame($post, $event->getPost());
+            $dispatchedEvent = $event;
+        });
 
         $controller = new PostControllerDouble();
         $controller->setContainer($this->createContainer($breadcrumb, $dispatcher));
@@ -61,6 +61,36 @@ final class PostControllerTest extends TestCase
         self::assertSame($post, $controller->lastParameters['post']);
         self::assertSame($category, $controller->lastParameters['category']);
         self::assertSame('fr', $request->getLocale());
+        self::assertInstanceOf(EasyBlogPostEvent::class, $dispatchedEvent);
+    }
+
+    public function testIndexKeepsLegacyNamedListenersWorking(): void
+    {
+        $category = new CategoryEntity();
+        $category->setName('News');
+        $category->setSlug('news');
+
+        $post = new PostEntity();
+        $post->setName('Launch');
+        $post->setSlug('launch');
+        $post->setCategory($category);
+
+        $request = Request::create('/blog/news/launch');
+        $request->attributes->set('_easy_blog_category', $category);
+        $request->attributes->set('_easy_blog_post', $post);
+
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addListener(EasyBlogPostEvent::NAME, static function (EasyBlogPostEvent $event): void {
+            $event->setTemplate('@EasyBlog/front/post_legacy.html.twig');
+        });
+
+        $controller = new PostControllerDouble();
+        $controller->setContainer($this->createContainer($this->createBreadcrumb(), $dispatcher));
+
+        $response = $controller->index($request, 'news', 'launch', 'fr');
+
+        self::assertSame('ok', $response->getContent());
+        self::assertSame('@EasyBlog/front/post_legacy.html.twig', $controller->lastTemplate);
     }
 
     private function createBreadcrumb(): BreadcrumbCollection

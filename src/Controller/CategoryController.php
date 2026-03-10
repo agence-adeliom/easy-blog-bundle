@@ -2,6 +2,7 @@
 
 namespace Adeliom\EasyBlogBundle\Controller;
 
+use Adeliom\EasyCommonBundle\Event\LegacyEventDispatcher;
 use Adeliom\EasyBlogBundle\Event\EasyBlogCategoryEvent;
 use Adeliom\EasySeoBundle\Entity\SEO;
 use Adeliom\EasySeoBundle\Services\BreadcrumbCollection;
@@ -58,7 +59,12 @@ class CategoryController extends AbstractController
         /**
          * @var EasyBlogCategoryEvent $result;
          */
-        $result = $this->container->get('event_dispatcher')->dispatch($event);
+        $result = LegacyEventDispatcher::dispatch(
+            $event,
+            $this->container->get('event_dispatcher'),
+            'agence-adeliom/easy-blog-bundle',
+            EasyBlogCategoryEvent::NAME
+        );
 
         return $this->render($result->getTemplate(), $result->getArgs());
     }
@@ -91,7 +97,12 @@ class CategoryController extends AbstractController
         /**
          * @var EasyBlogCategoryEvent $result;
          */
-        $result = $this->container->get('event_dispatcher')->dispatch($event);
+        $result = LegacyEventDispatcher::dispatch(
+            $event,
+            $this->container->get('event_dispatcher'),
+            'agence-adeliom/easy-blog-bundle',
+            EasyBlogCategoryEvent::NAME
+        );
 
         return $this->render($result->getTemplate(), $result->getArgs());
     }

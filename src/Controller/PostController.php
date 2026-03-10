@@ -2,6 +2,7 @@
 
 namespace Adeliom\EasyBlogBundle\Controller;
 
+use Adeliom\EasyCommonBundle\Event\LegacyEventDispatcher;
 use Adeliom\EasyBlogBundle\Event\EasyBlogCategoryEvent;
 use Adeliom\EasyBlogBundle\Event\EasyBlogPostEvent;
 use Adeliom\EasySeoBundle\Services\BreadcrumbCollection;
@@ -44,7 +45,12 @@ class PostController extends AbstractController
         /**
          * @var EasyBlogCategoryEvent $result;
          */
-        $result = $this->container->get('event_dispatcher')->dispatch($event);
+        $result = LegacyEventDispatcher::dispatch(
+            $event,
+            $this->container->get('event_dispatcher'),
+            'agence-adeliom/easy-blog-bundle',
+            EasyBlogPostEvent::NAME
+        );
 
         return $this->render($result->getTemplate(), $result->getArgs());
     }
